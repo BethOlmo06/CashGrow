@@ -34,6 +34,19 @@ namespace CashGrow.Helpers
             return result.Succeeded;
         }
 
+        public bool UpdateUserRole(string userId, string roleName)
+        {
+            var currentRoles = ListUserRoles(userId);
+            if (currentRoles.Count!= 0)
+                {
+                foreach (var role in currentRoles)
+                {
+                    RemoveUserFromRole(userId, role);
+                }
+            }
+            return AddUserToRole(userId, roleName);
+        }
+
         public ICollection<ApplicationUser> UsersInRole(string roleName)
         {
             var resultList = new List<ApplicationUser>();

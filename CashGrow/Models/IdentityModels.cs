@@ -12,6 +12,8 @@ namespace CashGrow.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         [Required]
         [Display(Name = "First Name")]
         [StringLength(50, MinimumLength =2, ErrorMessage ="First Name must be between 2 and 50 characters")]
@@ -38,6 +40,22 @@ namespace CashGrow.Models
             }
         }
 
+        [NotMapped]
+        public string HouseholdName
+        {
+            get {
+                var hhId = HouseholdId;
+                if(hhId == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return db.Households.Find(hhId).HouseholdName;
+                }
+            }
+        }
+
         public virtual ICollection<Budget> Budgets{ get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
@@ -56,6 +74,11 @@ namespace CashGrow.Models
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+            var hhId = HouseholdId != null ? HouseholdId.ToString() : "";
+            userIdentity.AddClaim(new Claim("HouseholdId", hhId));
+            userIdentity.AddClaim(new Claim("FullName", FullName));
+            userIdentity.AddClaim(new Claim("AvatarPath", AvatarPath));
+
             // Add custom user claims here
             return userIdentity;
         }
@@ -86,5 +109,6 @@ namespace CashGrow.Models
         public System.Data.Entity.DbSet<CashGrow.Models.Notification> Notifications { get; set; }
 
         public System.Data.Entity.DbSet<CashGrow.Models.Transaction> Transactions { get; set; }
+
     }
 }

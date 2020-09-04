@@ -1,4 +1,5 @@
 ﻿using CashGrow.Enums;
+using CashGrow.Extensions;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,7 @@ namespace CashGrow.Models
             Created = DateTime.Now;
             AccountName = accountName;
             OwnerId = HttpContext.Current.User.Identity.GetUserId();
+            HouseholdId = (int)HttpContext.Current.User.Identity.GetHouseholdId();
         }
 
         public BankAccount()

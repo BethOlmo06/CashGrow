@@ -179,6 +179,8 @@
     <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Enums\AccountType.cs" />
     <Compile Include="Enums\TransactionType.cs" />
+    <Compile Include="Extensions\AuthorizeExtensions.cs" />
+    <Compile Include="Extensions\IdentityExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -198,6 +200,7 @@
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\UpdateProfileVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Avatars\DefaultAvatar.png" />
@@ -292,10 +295,10 @@
     <Content Include="Views\Transactions\Details.cshtml" />
     <Content Include="Views\Transactions\Edit.cshtml" />
     <Content Include="Views\Transactions\Index.cshtml" />
+    <Content Include="Views\Manage\UpdateProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

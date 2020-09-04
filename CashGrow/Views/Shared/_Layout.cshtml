@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using CashGrow.Extensions;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -30,6 +31,9 @@
         </div>
     </div>
     <div class="container body-content">
+        @*<h1>My HouseholdId is: @User.Identity.GetHouseholdId()</h1>
+        <h2>My Name is: @User.Identity.GetFullName()</h2>
+        <h3>My Avatar is: @User.Identity.GetAvatarPath()</h3>*@
         @RenderBody()
         <hr />
         <footer>

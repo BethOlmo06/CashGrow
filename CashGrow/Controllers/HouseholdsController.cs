@@ -6,13 +6,18 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
+using CashGrow.Extensions;
+using CashGrow.Helpers;
 using CashGrow.Models;
+using Microsoft.AspNet.Identity;
 
 namespace CashGrow.Controllers
 {
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RolesHelper rolesHelper = new RolesHelper();
 
         // GET: Households
         public ActionResult Index()
@@ -46,13 +51,25 @@ namespace CashGrow.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdName,Greeting,Created,IsDeleted")] Household household)
+        public async Task<ActionResult> Create([Bind(Include = "Id,HouseholdName,Greeting")] Household household)
         {
             if (ModelState.IsValid)
             {
+                household.Created = DateTime.Now;
                 db.Households.Add(household);
                 db.SaveChanges();
+
+                var user = db.Users.Find(User.Identity.GetUserId());
+                user.HouseholdId = household.Id;
+
+                rolesHelper.AddUserToRole(user.Id, "Head");
+                db.SaveChanges();
+
+                await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
                 return RedirectToAction("Index");
+
+
+
             }
 
             return View(household);
