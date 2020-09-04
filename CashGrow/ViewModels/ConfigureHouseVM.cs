@@ -1,0 +1,35 @@
+﻿using CashGrow.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace CashGrow.ViewModels
+{
+    public class ConfigureHouseVM
+    {
+        #region One of Everything
+        //public BankAccount BankAccount { get; set; }
+
+        //public Budget Budget { get; set; }
+
+        //public BudgetItem BudgetItem { get; set; }
+        #endregion
+
+        #region Multiple Options
+        //public ICollection<BankAccount> BankAccounts { get; set; }
+
+        //public ICollection<Budget> Budgets{ get; set; }
+
+        //public ICollection<BudgetItem> BudgetItems{ get; set; }
+        #endregion
+
+
+        //public ICollection <BankAccountWizardVM> BankAccounts{ get; set; }
+
+        //public ICollection<BudgetWizardVM>  Budgets{ get; set; }
+
+
+
+    }
+}
