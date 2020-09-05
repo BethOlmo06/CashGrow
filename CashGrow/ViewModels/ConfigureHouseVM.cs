@@ -8,12 +8,16 @@ namespace CashGrow.ViewModels
 {
     public class ConfigureHouseVM
     {
+        public int? HouseholdId { get; set; }
+
         #region One of Everything
-        //public BankAccount BankAccount { get; set; }
+        public BankAccount BankAccount { get; set; }
 
-        //public Budget Budget { get; set; }
+        public decimal StartingBalance { get; set; }
 
-        //public BudgetItem BudgetItem { get; set; }
+        public Budget Budget { get; set; }
+
+        public BudgetItem BudgetItem { get; set; }
         #endregion
 
         #region Multiple Options

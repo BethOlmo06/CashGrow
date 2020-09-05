@@ -11,6 +11,8 @@ using CashGrow.Extensions;
 using CashGrow.Helpers;
 using CashGrow.Models;
 using Microsoft.AspNet.Identity;
+using CashGrow.ViewModels;
+using System.Drawing;
 
 namespace CashGrow.Controllers
 {
@@ -50,6 +52,7 @@ namespace CashGrow.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        //[Authorize(Roles = "New User")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,HouseholdName,Greeting")] Household household)
         {
@@ -66,14 +69,52 @@ namespace CashGrow.Controllers
                 db.SaveChanges();
 
                 await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
-                return RedirectToAction("Index");
-
-
+                return RedirectToAction("ConfigureHouse");
 
             }
 
             return View(household);
         }
+
+        [HttpGet]
+        //[Authorize(Roles = "Head")]
+        public ActionResult ConfigureHouse()
+        {
+            var model = new ConfigureHouseVM();
+            model.HouseholdId = User.Identity.GetHouseholdId();
+            if(model.HouseholdId == null)
+            {
+                return RedirectToAction("Create");
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfigureHouse(ConfigureHouseVM model)
+        {
+            var bankAccount = new BankAccount(model.BankAccount.StartingBalance, model.BankAccount.WarningBalance, model.BankAccount.AccountName);
+            bankAccount.AccountType = model.BankAccount.AccountType;
+            db.BankAccounts.Add(bankAccount);
+
+            var budget = new Budget();
+            budget.HouseholdId = (int)model.HouseholdId;
+            budget.BudgetName = model.Budget.BudgetName;
+            db.Budgets.Add(budget);
+
+            db.SaveChanges();
+
+            var budgetItem = new BudgetItem();
+            budgetItem.BudgetId = budget.Id;
+            budgetItem.TargetAmount = model.BudgetItem.TargetAmount;
+            budgetItem.ItemName = model.BudgetItem.ItemName;
+            db.BudgetItems.Add(budgetItem);
+
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
+
 
         // GET: Households/Edit/5
         public ActionResult Edit(int? id)
