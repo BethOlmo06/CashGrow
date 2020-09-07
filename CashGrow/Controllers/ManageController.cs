@@ -297,7 +297,7 @@ namespace CashGrow.Controllers
             db.SaveChanges();
 
             await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
-            return RedirectToAction("UpdateProfile");
+            return RedirectToAction("Login");
         }
 
 
