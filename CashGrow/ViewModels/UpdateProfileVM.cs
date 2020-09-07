@@ -27,5 +27,10 @@ namespace CashGrow.ViewModels
             FirstName = user.FirstName;
             LastName = user.LastName;
         }
+
+        public UpdateProfileVM()
+        {
+                
+        }
     }
 }

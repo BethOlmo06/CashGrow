@@ -283,7 +283,8 @@ namespace CashGrow.Controllers
         public ActionResult UpdateProfile()
         {
             var user = db.Users.Find(User.Identity.GetUserId());
-            return View(user);
+            var model = new UpdateProfileVM(user);
+            return View(model);
         }
 
         [HttpPost]
