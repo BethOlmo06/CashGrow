@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using CashGrow.Extensions;
 using CashGrow.Models;
 
 namespace CashGrow.Controllers
@@ -55,6 +56,9 @@ namespace CashGrow.Controllers
             {
                 db.Transactions.Add(transaction);
                 db.SaveChanges();
+                var thisTransaction = db.Transactions.Include(t => t.BudgetItem).FirstOrDefault(t => t.Id == transaction.Id);
+                thisTransaction.UpdateBalances();
+
                 return RedirectToAction("Index");
             }
 
@@ -75,6 +79,7 @@ namespace CashGrow.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.AccountId = new SelectList(db.BankAccounts, "Id", "OwnerId", transaction.AccountId);
             ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "ItemName", transaction.BudgetItemId);
             ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName", transaction.OwnerId);
             return View(transaction);
@@ -89,10 +94,15 @@ namespace CashGrow.Controllers
         {
             if (ModelState.IsValid)
             {
+                //var oldTransaction = db.Transactions.AsNoTracking();
                 db.Entry(transaction).State = EntityState.Modified;
                 db.SaveChanges();
+
+                //var newTransaction = db.Transactions.AsNoTracking();
+                //newTransaction.EditTransaction(oldTransaction);
                 return RedirectToAction("Index");
             }
+            ViewBag.AccountId = new SelectList(db.BankAccounts, "Id", "OwnerId", transaction.AccountId);
             ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "ItemName", transaction.BudgetItemId);
             ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName", transaction.OwnerId);
             return View(transaction);

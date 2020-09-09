@@ -28,7 +28,7 @@ namespace CashGrow.Models
 
         public virtual Household Household { get; set; }
 
-        public string AvatarPath { get; set; }
+        //public string AvatarPath { get; set; }
 
         [NotMapped]
         [Display(Name ="Full Name")]
@@ -67,7 +67,7 @@ namespace CashGrow.Models
             Notifications = new HashSet<Notification>();
             Transactions = new HashSet<Transaction>();
             Accounts = new HashSet<BankAccount>();
-            AvatarPath = "/Avatars/DefaultAvatar.png";
+            //AvatarPath = "/Avatars/DefaultAvatar.png";
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -77,7 +77,7 @@ namespace CashGrow.Models
             var hhId = HouseholdId != null ? HouseholdId.ToString() : "";
             userIdentity.AddClaim(new Claim("HouseholdId", hhId));
             userIdentity.AddClaim(new Claim("FullName", FullName));
-            userIdentity.AddClaim(new Claim("AvatarPath", AvatarPath));
+            //userIdentity.AddClaim(new Claim("AvatarPath", AvatarPath));
 
             // Add custom user claims here
             return userIdentity;

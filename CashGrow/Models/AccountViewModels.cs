@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 
@@ -94,6 +95,15 @@ namespace CashGrow.Models
         [StringLength(50, MinimumLength = 2, ErrorMessage = "First Name must be between 2 and 50 characters")]
         public string LastName { get; set; }
         public HttpPostedFileBase Avatar { get; set; }
+    }
+
+    public class AcceptInvitationVM: ExtendedRegisterViewModel
+    {
+        public int InvitationId { get; set; }
+
+        public Guid Code { get; set; }
+
+        public int HouseholdId { get; set; }
     }
 
     public class ResetPasswordViewModel

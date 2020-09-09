@@ -30,6 +30,14 @@ namespace CashGrow.Models
 
         public Guid Code { get; set; }
 
+        public Invitation(int hhId)
+        { 
+            Created = DateTime.Now;
+            IsValid = true;
+            TTL = 3;
+            HouseholdId = hhId;
+        }
+
         public Invitation()
         {
             Created = DateTime.Now;

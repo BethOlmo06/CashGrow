@@ -13,6 +13,7 @@ using CashGrow.Helpers;
 using System.Net.Mail;
 using System.IO;
 using System.Web.Configuration;
+using CashGrow.Extensions;
 
 namespace CashGrow.Controllers
 {
@@ -22,6 +23,7 @@ namespace CashGrow.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private RolesHelper rolesHelper = new RolesHelper();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -62,6 +64,11 @@ namespace CashGrow.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                AuthorizeExtensions.AutoLogOut(HttpContext);
+            }
+            
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -162,20 +169,20 @@ namespace CashGrow.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    AvatarPath = WebConfigurationManager.AppSettings["DefaultAvatarPath"]
+                    //AvatarPath = WebConfigurationManager.AppSettings["DefaultAvatarPath"]
                 };
 
-                if (model.Avatar != null)
-                {
-                    if (FileValidator.IsWebFriendlyImage(model.Avatar))
-                    {
-                        var fileName = FileStamp.MakeUnique(model.Avatar.FileName);
-                        var serverFolder = WebConfigurationManager.AppSettings["DefaultServerFolder"];
-                        model.Avatar.SaveAs(Path.Combine(Server.MapPath(serverFolder), fileName));
-                        user.AvatarPath = $"{serverFolder}{fileName}";
-                    }
+                //if (model.Avatar != null)
+                //{
+                //    if (FileValidator.IsWebFriendlyImage(model.Avatar))
+                //    {
+                //        var fileName = FileStamp.MakeUnique(model.Avatar.FileName);
+                //        var serverFolder = WebConfigurationManager.AppSettings["DefaultServerFolder"];
+                //        model.Avatar.SaveAs(Path.Combine(Server.MapPath(serverFolder), fileName));
+                //        //user.AvatarPath = $"{serverFolder}{fileName}";
+                //    }
 
-                }
+                //}
 
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -200,7 +207,7 @@ namespace CashGrow.Controllers
                         var svc = new EmailService();
                         await svc.SendAsync(email);
 
-                        //return View("ConfirmEmail");
+                        return View("ConfirmEmail");
 
                     }
                     catch (Exception ex)
@@ -217,6 +224,61 @@ namespace CashGrow.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+        [AllowAnonymous]
+        public ActionResult AcceptInvitation(string recipientEmail, string code)
+        {
+            var realGuid = Guid.Parse(code);
+            var invitation = db.Invitations.FirstOrDefault(i => i.RecipientEmail == recipientEmail && i.Code == realGuid);
+            if (invitation == null)
+            {
+                //be sure to create this fail case view - "No invitation found"
+                return View("NotFoundError", invitation);
+            }
+            var expirationDate = invitation.Created.AddDays(invitation.TTL);
+            if (invitation.IsValid && DateTime.Now < expirationDate)
+            {
+                var householdName = db.Households.Find(invitation.HouseholdId).HouseholdName;
+                ViewBag.Greeting = $"Thank you for accepting my invitation to join the {householdName} House!";
+                var model = new AcceptInvitationVM()
+                {
+                    InvitationId = invitation.Id,
+                    Email = recipientEmail,
+                    Code = realGuid,
+                    HouseholdId = invitation.HouseholdId
+                };
+                return View(model);
+            }
+            return View("AcceptError", invitation);
+            
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<ActionResult> AcceptInvitation(AcceptInvitationVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    rolesHelper.UpdateUserRole(user.Id, "New User");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+            return View(model);
+
 
         //
         // GET: /Account/ConfirmEmail
