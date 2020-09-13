@@ -28,7 +28,7 @@ namespace CashGrow
         public async Task SendAsync(MailMessage message)
         {
             var MailUsername = WebConfigurationManager.AppSettings["username"];
-            var mailPassword = WebConfigurationManager.AppSettings["password"];
+            var MailPassword = WebConfigurationManager.AppSettings["password"];
             var host = WebConfigurationManager.AppSettings["host"];
             int port = Convert.ToInt32(WebConfigurationManager.AppSettings["port"]);
 
@@ -39,7 +39,7 @@ namespace CashGrow
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(MailUsername, mailPassword)
+                Credentials = new NetworkCredential(MailUsername, MailPassword)
             })
             {
                 try

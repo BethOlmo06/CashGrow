@@ -10,6 +10,7 @@ namespace CashGrow.ViewModels
     {
         public int? HouseholdId { get; set; }
 
+
         #region One of Everything
         public BankAccount BankAccount { get; set; }
 

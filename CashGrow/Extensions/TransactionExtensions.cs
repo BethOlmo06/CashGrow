@@ -24,6 +24,7 @@ namespace CashGrow.Extensions
 
         #endregion
 
+        //Chaining method calls under a public method
         public static void UpdateBalances(this Transaction transaction)
         {
             UpdateBankBalance(transaction);
@@ -55,17 +56,17 @@ namespace CashGrow.Extensions
 
         private static void UpdateBudgetAmount(Transaction transaction)
         {
-            //var budgetId = db.BudgetItems.Find(transaction.BudgetItemId);
-            //var budget = db.Budgets.Find(budgetId);
-            var budget = db.Budgets.Find(transaction.BudgetItem.BudgetId);
+            var budgetItem = db.BudgetItems.Find(transaction.BudgetItemId);
+            var budget = db.Budgets.Find(budgetItem.BudgetId);
+            //var budget = db.Budgets.Find(transaction.BudgetItem.BudgetId);
             budget.CurrentAmount += transaction.Amount;
             db.SaveChanges();
         }
 
         private static void UpdateBudgetItemAmount(Transaction transaction)
         {
-            var budget = db.Budgets.Find(transaction.BudgetItemId);
-            budget.CurrentAmount += transaction.Amount;
+            var budgetItem = db.Budgets.Find(transaction.BudgetItemId);
+            budgetItem.CurrentAmount += transaction.Amount;
             db.SaveChanges();
         }
 

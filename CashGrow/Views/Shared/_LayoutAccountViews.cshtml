@@ -1,0 +1,61 @@
+﻿@using CashGrow.Extensions;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+
+    <!-- Fonts and icons -->
+    <script src="~/Scripts/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Lato:300,400,700,900"] },
+            custom: {
+                "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['~/Content/fonts.css']
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+
+    @Styles.Render("~/Content/bootstrap.min.css")
+    @Styles.Render("~/Content/atlantis2.css")
+    @Styles.Render("~/Content/fonts.min.css")
+
+</head>
+<body>
+
+
+    @RenderBody()
+    <footer class="footer">
+        <div class="container">
+            <nav class="pull-left">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://www.themekita.com">
+                            ThemeKita
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Help
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Licenses
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="copyright ml-auto">
+                &copy; @DateTime.Now.Year - <a href="https://betholmo-portfolio.netlify.app/" target="_blank">Beth Olmo, M.S.</a>
+            </div>
+        </div>
+    </footer>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

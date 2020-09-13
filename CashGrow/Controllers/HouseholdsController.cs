@@ -43,7 +43,6 @@ namespace CashGrow.Controllers
         }
 
         // GET: Households/Create
-        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -65,8 +64,11 @@ namespace CashGrow.Controllers
 
                 var user = db.Users.Find(User.Identity.GetUserId());
                 user.HouseholdId = household.Id;
-
-                rolesHelper.AddUserToRole(user.Id, "Head");
+                foreach (var account in user.Accounts)
+                {
+                    account.HouseholdId = household.Id;
+                }
+                rolesHelper.UpdateUserRole(user.Id, "Head");
                 db.SaveChanges();
 
                 await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
@@ -83,8 +85,8 @@ namespace CashGrow.Controllers
         {
             var model = new ConfigureHouseVM();
             model.HouseholdId = User.Identity.GetHouseholdId();
-            if(model.HouseholdId == null)
-            {
+            if(model.HouseholdId == 0)
+            { 
                 return RedirectToAction("Create");
             }
             return View(model);
@@ -94,7 +96,7 @@ namespace CashGrow.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConfigureHouse(ConfigureHouseVM model)
         {
-            var bankAccount = new BankAccount(model.BankAccount.StartingBalance, model.BankAccount.WarningBalance, model.BankAccount.AccountName);
+            var bankAccount = new BankAccount(model.StartingBalance, model.BankAccount.WarningBalance, model.BankAccount.AccountName);
             bankAccount.AccountType = model.BankAccount.AccountType;
             db.BankAccounts.Add(bankAccount);
 
@@ -146,6 +148,114 @@ namespace CashGrow.Controllers
                 return RedirectToAction("Index");
             }
             return View(household);
+        }
+
+        // Leave Household - how to?
+        // User leaving has their hhId set to Null
+        // If the user was Head, someone else must take that role
+        // Anyone leaving needs role reset to New User
+        // If the user is the last / only one in the household, the household can be deleted
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //[AuthorizeHouseholdRequired]
+        public async Task<ActionResult> LeaveAsync()
+        {
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.Find(userId);
+            var role = rolesHelper.ListUserRoles(userId).FirstOrDefault();
+
+            switch (role)
+            {
+                case "Head":
+                    var memberCount = db.Users.Where(u => u.HouseholdId == user.HouseholdId).Count() - 1;
+                    if(memberCount >= 1)
+                    {
+                        TempData["Message"] = $"You are unable to leave the Household! There are still <b>{memberCount}</b> other members in the household. Please select one of them to assume your role.";
+                        return RedirectToAction("ExitDenied");
+                    }
+                    //Soft delete - record stays in db, but access can be limited on front end
+                    user.Household.IsDeleted = true;
+                    //Hard delete - record is removed from db & anything w/ the household's FK will be cascade deleted
+                    //var household = db.Households.Find(user.HouseholdId);
+                    //db.Households.Remove(household);
+                    user.HouseholdId = null;
+
+                    foreach (var account in user.Accounts)
+                    {
+                        account.HouseholdId = null;
+                    }
+
+                    db.SaveChanges();
+
+                    rolesHelper.UpdateUserRole(userId, "New User");
+                    await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
+                    return RedirectToAction("Index", "Home");
+
+                case "Member":
+                    user.HouseholdId = null;
+                    foreach (var account in user.Accounts)
+                    {
+                        account.HouseholdId = null;
+                    }
+                    db.SaveChanges();
+                    rolesHelper.UpdateUserRole(userId, "New User");
+                        await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
+                    return RedirectToAction("Index", "Home");
+                default:
+                    return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [Authorize(Roles = "Head")]
+        public ActionResult ExitDenied()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Head")]
+        public ActionResult ChangeHead()
+        {
+            var myHouseId = User.Identity.GetHouseholdId();
+            if(myHouseId == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var members = db.Users.Where(u => u.HouseholdId == myHouseId).ToList();
+
+            ViewBag.NewHoH = new SelectList(members, "Id", "FullName");
+
+            return View();
+        }
+
+        [HttpPost, ActionName("ChangeHead")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeHeadAsync(string newHoH, bool leave)
+        {
+            if (string.IsNullOrEmpty(newHoH) || newHoH == User.Identity.GetUserId())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = db.Users.Find(User.Identity.GetUserId());
+            rolesHelper.UpdateUserRole(newHoH, "Head");
+            if (leave)
+            {
+                user.HouseholdId = null;
+
+                foreach (var account in user.Accounts)
+                {
+                    account.HouseholdId = null;
+                }
+                db.SaveChanges();
+                rolesHelper.UpdateUserRole(user.Id, "New User");
+                await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
+            }
+            else
+            {
+                rolesHelper.UpdateUserRole(user.Id, "Member");
+                await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Households/Delete/5

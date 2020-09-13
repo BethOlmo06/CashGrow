@@ -64,11 +64,11 @@ namespace CashGrow.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 AuthorizeExtensions.AutoLogOut(HttpContext);
             }
-            
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -187,9 +187,9 @@ namespace CashGrow.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    rolesHelper.UpdateUserRole(user.Id, "New User");
+                    
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
+                    rolesHelper.UpdateUserRole(user.Id, "New User");
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
@@ -207,7 +207,7 @@ namespace CashGrow.Controllers
                         var svc = new EmailService();
                         await svc.SendAsync(email);
 
-                        return View("ConfirmEmail");
+                        return View("ConfirmationSent");
 
                     }
                     catch (Exception ex)
@@ -225,59 +225,59 @@ namespace CashGrow.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
-        public ActionResult AcceptInvitation(string recipientEmail, string code)
-        {
-            var realGuid = Guid.Parse(code);
-            var invitation = db.Invitations.FirstOrDefault(i => i.RecipientEmail == recipientEmail && i.Code == realGuid);
-            if (invitation == null)
-            {
-                //be sure to create this fail case view - "No invitation found"
-                return View("NotFoundError", invitation);
-            }
-            var expirationDate = invitation.Created.AddDays(invitation.TTL);
-            if (invitation.IsValid && DateTime.Now < expirationDate)
-            {
-                var householdName = db.Households.Find(invitation.HouseholdId).HouseholdName;
-                ViewBag.Greeting = $"Thank you for accepting my invitation to join the {householdName} House!";
-                var model = new AcceptInvitationVM()
-                {
-                    InvitationId = invitation.Id,
-                    Email = recipientEmail,
-                    Code = realGuid,
-                    HouseholdId = invitation.HouseholdId
-                };
-                return View(model);
-            }
-            return View("AcceptError", invitation);
-            
-        }
+        //[AllowAnonymous]
+        //public ActionResult AcceptInvitation(string recipientEmail, string code)
+        //{
+        //    var realGuid = Guid.Parse(code);
+        //    var invitation = db.Invitations.FirstOrDefault(i => i.RecipientEmail == recipientEmail && i.Code == realGuid);
+        //    if (invitation == null)
+        //    {
+        //        //be sure to create this fail case view - "No invitation found"
+        //        return View("NotFoundError", invitation);
+        //    }
+        //    var expirationDate = invitation.Created.AddDays(invitation.TTL);
+        //    if (invitation.IsValid && DateTime.Now < expirationDate)
+        //    {
+        //        var householdName = db.Households.Find(invitation.HouseholdId).HouseholdName;
+        //        ViewBag.Greeting = $"Thank you for accepting my invitation to join the {householdName} House!";
+        //        var model = new AcceptInvitationVM()
+        //        {
+        //            InvitationId = invitation.Id,
+        //            Email = recipientEmail,
+        //            Code = realGuid,
+        //            HouseholdId = invitation.HouseholdId
+        //        };
+        //        return View(model);
+        //    }
+        //    return View("AcceptError", invitation);
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<ActionResult> AcceptInvitation(AcceptInvitationVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    rolesHelper.UpdateUserRole(user.Id, "New User");
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //}
 
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
-            }
-            return View(model);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[AllowAnonymous]
+        //public async Task<ActionResult> AcceptInvitation(AcceptInvitationVM model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = new ApplicationUser
+        //        {
+        //            UserName = model.Email,
+        //            Email = model.Email,
+        //            FirstName = model.FirstName,
+        //            LastName = model.LastName,
+        //        };
+        //        var result = await UserManager.CreateAsync(user, model.Password);
+        //        if (result.Succeeded)
+        //        {
+        //            rolesHelper.UpdateUserRole(user.Id, "New User");
+        //            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+        //            return RedirectToAction("Index", "Home");
+        //        }
+        //        AddErrors(result);
+        //    }
+        //    return View(model);
 
 
         //
@@ -293,6 +293,7 @@ namespace CashGrow.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
+
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
@@ -306,7 +307,7 @@ namespace CashGrow.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPassword(ForgotViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -320,9 +321,32 @@ namespace CashGrow.Controllers
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                try
+                {
+                    var from = "CashGrow<cashgrow@gmail.com>";
+                    var email = new MailMessage(from, model.Email)
+                    {
+                        Subject = "Reset Password",
+                        Body = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here.</a>",
+                        IsBodyHtml = true
+                    };
+
+                    var svc = new EmailService();
+                    await svc.SendAsync(email);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    await Task.FromResult(0);
+                }
+
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
+
+            //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            //return RedirectToAction("ForgotPasswordConfirmation", "Account");
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -400,11 +424,11 @@ namespace CashGrow.Controllers
 
                 try
                 {
-                    var from = "TrackIT<issuetrackerclientcare@gmail.com>";
+                    var from = "CashGrow<cashgrowclientcare@gmail.com>";
                     var email = new MailMessage(from, model.Email)
                     {
                         Subject = "Confirm Your Account",
-                        Body = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>",
+                        Body = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here.</a>",
                         IsBodyHtml = true
                     };
 
