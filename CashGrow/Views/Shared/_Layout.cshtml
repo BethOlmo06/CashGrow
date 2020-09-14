@@ -26,6 +26,13 @@
 </head>
 <body>
 
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#manualJoin">
+        Join A Household
+    </button>
+
+    <h1>My HouseholdId is: @User.Identity.GetHouseholdId()</h1>
+    <h1>My FullName is: @User.Identity.GetFullName()</h1>
+    @*<h1>My Avatar is: @User.Identity.GetAvatarPath()</h1>*@
 
     @RenderBody()
     <footer class="footer">
@@ -54,6 +61,39 @@
             </div>
         </div>
     </footer>
+
+    <section id="manualJoinModal">
+        <div class="modal" id="manualJoin" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @using (Html.BeginForm("ManualJoin", "Account", FormMethod.Post, null,))
+                        {
+                            <div class="form-group">
+                                Invitation Code
+                                @Html.TextBox("Code", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <div class="col=md-offset-2 col-md-10">
+                                    <input typeof="submit" class="btn btn-success" value="Register" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     @RenderSection("scripts", required: false)
 

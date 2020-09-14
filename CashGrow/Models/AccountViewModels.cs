@@ -99,6 +99,7 @@ namespace CashGrow.Models
 
     public class AcceptInvitationVM: ExtendedRegisterViewModel
     {
+        //primary key of the invitation
         public int InvitationId { get; set; }
 
         public Guid Code { get; set; }

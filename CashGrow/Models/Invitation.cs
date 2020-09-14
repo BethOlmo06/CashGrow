@@ -17,6 +17,7 @@ namespace CashGrow.Models
 
         public string Body { get; set; }
 
+        //This should start as true and then be flipped to false under certain conditions
         public bool IsValid { get; set; }
 
         public DateTime Created { get; set; }
@@ -24,6 +25,7 @@ namespace CashGrow.Models
         public int TTL { get; internal set; }
 
         //if(DateTime.Now > Created.AddDays(TTL){IsValid = false
+
 
         [Display(Name ="Recipient Email")]
         public string RecipientEmail { get; set; }

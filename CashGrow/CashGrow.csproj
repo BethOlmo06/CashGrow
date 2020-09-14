@@ -342,6 +342,8 @@
     <Content Include="Views\Account\ResendEmailConfirmation.cshtml" />
     <Content Include="Views\Account\ConfirmationSent.cshtml" />
     <Content Include="Views\Shared\_LayoutAccountViews.cshtml" />
+    <Content Include="Views\Account\DemoLogin.cshtml" />
+    <Content Include="Views\Account\AcceptInvitation.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

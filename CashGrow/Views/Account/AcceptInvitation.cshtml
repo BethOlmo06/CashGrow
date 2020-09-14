@@ -1,7 +1,7 @@
-﻿@model CashGrow.Models.ExtendedRegisterViewModel
+﻿@model CashGrow.Models.AcceptInvitationVM
 @{
     ViewBag.Title = "Register";
-    //Layout = "~/Views/Shared/_LayoutAccountViews.cshtml";
+    Layout = "~/Views/Shared/_LayoutAccountViews.cshtml";
 }
 
 <head>
@@ -43,9 +43,12 @@
                 <h4 class="font-italic text-center">New users have Read-Only access.</h4>
                 <br />
                 <div class="login-form">
-                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "Multipart/form-data" }))
+                    @using (Html.BeginForm("AcceptInvitation", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "Multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.InvitationId)
+                        @Html.HiddenFor(model => model.Code)
+                        @Html.HiddenFor(model => model.HouseholdId)
                         @Html.ValidationSummary("", new { @class = "text-danger" })
                         <div class="form-group">
                             @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
