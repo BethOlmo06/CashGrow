@@ -13,7 +13,7 @@ namespace CashGrow.Models
     {
         public int Id { get; set; }
 
-        public int HouseholdId { get; set; }
+        public int? HouseholdId { get; set; }
 
         public string OwnerId { get; set; }
 

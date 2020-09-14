@@ -169,18 +169,19 @@ namespace CashGrow.Controllers
             {
                 case "Head":
                     var memberCount = db.Users.Where(u => u.HouseholdId == user.HouseholdId).Count() - 1;
-                    if(memberCount >= 1)
+                    if (memberCount >= 1)
                     {
-                        TempData["Message"] = $"You are unable to leave the Household! There are still <b>{memberCount}</b> other members in the household. Please select one of them to assume your role.";
+                        TempData["Message"] = $"You are unable to leave the Household! There are still <b>{memberCount}</b> other members in the household, you must select one of them to assume your role!";
                         return RedirectToAction("ExitDenied");
                     }
-                    //Soft delete - record stays in db, but access can be limited on front end
+                    //This is a soft delete, the record stays in the DB, but you can limit access on the front end
                     user.Household.IsDeleted = true;
-                    //Hard delete - record is removed from db & anything w/ the household's FK will be cascade deleted
+                    //This is a hard delete, the record is removed from the DB and anything with the Household's FK will be cascade deleted
                     //var household = db.Households.Find(user.HouseholdId);
                     //db.Households.Remove(household);
                     user.HouseholdId = null;
 
+                    //Remove the HouseholdId from all BankAccounts associated with this user
                     foreach (var account in user.Accounts)
                     {
                         account.HouseholdId = null;
@@ -191,16 +192,17 @@ namespace CashGrow.Controllers
                     rolesHelper.UpdateUserRole(userId, "New User");
                     await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
                     return RedirectToAction("Index", "Home");
-
                 case "Member":
                     user.HouseholdId = null;
+                    //Remove the HouseholdId from all BankAccounts associated with this user
                     foreach (var account in user.Accounts)
                     {
                         account.HouseholdId = null;
                     }
                     db.SaveChanges();
+
                     rolesHelper.UpdateUserRole(userId, "New User");
-                        await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
+                    await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
                     return RedirectToAction("Index", "Home");
                 default:
                     return RedirectToAction("Index", "Home");

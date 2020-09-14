@@ -24,10 +24,6 @@ namespace CashGrow.Migrations
             var roleManager = new RoleManager<IdentityRole>(
                 new RoleStore<IdentityRole>(context));
 
-            if (!context.Roles.Any(r => r.Name == "Admin"))
-            {
-                roleManager.Create(new IdentityRole { Name = "Admin" });
-            }
 
             if (!context.Roles.Any(r => r.Name == "Head"))
             {
@@ -48,26 +44,15 @@ namespace CashGrow.Migrations
             #region Users Creation
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            var demoAdminEmail = WebConfigurationManager.AppSettings["DemoAdminEmail"];
             var demoHeadEmail = WebConfigurationManager.AppSettings["DemoHeadEmail"];
             var demoMemberEmail = WebConfigurationManager.AppSettings["DemoMemberEmail"];
-            var demoAdminPassword = WebConfigurationManager.AppSettings["DemoAdminPassword"];
+            var demoHead2Email = WebConfigurationManager.AppSettings["DemoHead2Email"];
+            var demoMember2Email = WebConfigurationManager.AppSettings["DemoMember2Email"];
+
             var demoHeadPassword = WebConfigurationManager.AppSettings["DemoHeadPassword"];
             var demoMemberPassword = WebConfigurationManager.AppSettings["DemoMemberPassword"];
-
-            if (!context.Users.Any(u => u.Email == "DemAd06@mailinator.com"))
-            {
-                userManager.Create(new ApplicationUser()
-                {
-                    Email = demoAdminEmail,
-                    UserName = demoAdminEmail,
-                    FirstName = "Beth",
-                    LastName = "Olmo, MS",
-                }, demoAdminPassword);
-
-                var userId = userManager.FindByEmail("DemAd06@mailinator.com").Id;
-                userManager.AddToRole(userId, "Admin");
-            };
+            var demoHead2Password = WebConfigurationManager.AppSettings["DemoHead2Password"];
+            var demoMember2Password = WebConfigurationManager.AppSettings["DemoMember2Password"];
 
             if (!context.Users.Any(u => u.Email == "DemHead@mailinator.com"))
             {
@@ -94,6 +79,7 @@ namespace CashGrow.Migrations
                 var userId = userManager.FindByEmail("DemMemb@mailinator.com").Id;
                 userManager.AddToRole(userId, "Member");
             };
+
             #endregion
         }
     }

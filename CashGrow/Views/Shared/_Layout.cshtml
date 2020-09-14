@@ -32,7 +32,7 @@
 
     <h1>My HouseholdId is: @User.Identity.GetHouseholdId()</h1>
     <h1>My FullName is: @User.Identity.GetFullName()</h1>
-    @*<h1>My Avatar is: @User.Identity.GetAvatarPath()</h1>*@
+    <h1>My Avatar is: @User.Identity.GetAvatarPath()</h1>
 
     @RenderBody()
     <footer class="footer">
@@ -73,22 +73,26 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @using (Html.BeginForm("ManualJoin", "Account", FormMethod.Post, null,))
+                        @using (Html.BeginForm("ManualJoin", "Account", FormMethod.Post, null))
                         {
                             <div class="form-group">
                                 Invitation Code
-                                @Html.TextBox("Code", new { @class = "form-control" })
+                                <div class="col-md-10">
+                                    @Html.TextBox("Code", new { @class = "form-control" })
+                                </div>
                             </div>
+
                             <div class="form-group">
-                                <div class="col=md-offset-2 col-md-10">
-                                    <input typeof="submit" class="btn btn-success" value="Register" />
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" class="btn btn-default" value="Register" />
                                 </div>
                             </div>
                         }
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-success">Save changes</button>
                     </div>
                 </div>
             </div>

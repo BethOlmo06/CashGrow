@@ -103,33 +103,33 @@ namespace CashGrow.Controllers
             }
         }
 
-        //[AllowAnonymous]
-        //public ActionResult DemoLogin()
-        //{
-        //    return View();
-        //}
+        [AllowAnonymous]
+        public ActionResult DemoLogin()
+        {
+            return View();
+        }
 
-        //// POST: /Account/Login
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> DemoLogin(string emailKey, string passwordKey, string returnUrl)
-        //{
+        // POST: /Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DemoLogin(string emailKey, string passwordKey, string returnUrl)
+        {
 
-        //    var email = WebConfigurationManager.AppSettings[emailKey];
-        //    var password = WebConfigurationManager.AppSettings[passwordKey];
+            var email = WebConfigurationManager.AppSettings[emailKey];
+            var password = WebConfigurationManager.AppSettings[passwordKey];
 
-        //    var result = await SignInManager.PasswordSignInAsync(email, password, false, shouldLockout: false);
-        //    switch (result)
-        //    {
-        //        case SignInStatus.Success:
-        //            return RedirectToLocal(returnUrl);
-        //        case SignInStatus.Failure:
-        //        default:
-        //            ModelState.AddModelError("", "Invalid login attempt.");
-        //            return View();
-        //    }
-        //}
+            var result = await SignInManager.PasswordSignInAsync(email, password, false, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View();
+            }
+        }
 
         //
         // GET: /Account/VerifyCode
@@ -197,20 +197,20 @@ namespace CashGrow.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    //AvatarPath = WebConfigurationManager.AppSettings["DefaultAvatarPath"]
+                    AvatarPath = WebConfigurationManager.AppSettings["DefaultAvatarPath"]
                 };
 
-                //if (model.Avatar != null)
-                //{
-                //    if (FileValidator.IsWebFriendlyImage(model.Avatar))
-                //    {
-                //        var fileName = FileStamp.MakeUnique(model.Avatar.FileName);
-                //        var serverFolder = WebConfigurationManager.AppSettings["DefaultServerFolder"];
-                //        model.Avatar.SaveAs(Path.Combine(Server.MapPath(serverFolder), fileName));
-                //        //user.AvatarPath = $"{serverFolder}{fileName}";
-                //    }
+                if (model.Avatar != null)
+                {
+                    if (FileValidator.IsWebFriendlyImage(model.Avatar))
+                    {
+                        var fileName = FileStamp.MakeUnique(model.Avatar.FileName);
+                        var serverFolder = WebConfigurationManager.AppSettings["DefaultServerFolder"];
+                        model.Avatar.SaveAs(Path.Combine(Server.MapPath(serverFolder), fileName));
+                        user.AvatarPath = $"{serverFolder}{fileName}";
+                    }
 
-                //}
+                }
 
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
