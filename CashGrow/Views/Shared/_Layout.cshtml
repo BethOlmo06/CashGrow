@@ -263,16 +263,16 @@
                                 <li class="nav-item dropdown hidden-caret">
                                     <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                                         <div class="avatar-sm">
-                                            <img src="https://via.placeholder.com/50" alt="..." class="avatar-img rounded-circle">
+                                            <img src="~/Avatars/DefaultAvatar.png" alt="..." class="avatar-img rounded-circle">
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-user animated fadeIn">
                                         <div class="dropdown-user-scroll scrollbar-outer">
                                             <li>
                                                 <div class="user-box">
-                                                    <div class="avatar-lg"><img src="https://via.placeholder.com/50" alt="image profile" class="avatar-img rounded"></div>
+                                                    <div class="avatar-lg"><img src="" alt="image profile" class="avatar-img rounded"></div>
                                                     <div class="u-text">
-                                                        <h4>Hizrian</h4>
+                                                        <h4>@User</h4>
                                                         <p class="text-muted">hello@example.com</p><a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                                     </div>
                                                 </div>
@@ -388,28 +388,28 @@
 
         @RenderBody()
 
-    <footer class="footer mt-auto">
-        <div class="container">
-            <nav class="pull-left">
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Home/About">
-                            About
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Log Out
-                        </a>
-                    </li>
+        <footer class="footer mt-auto">
+            <div class="container">
+                <nav class="pull-left">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Home/About">
+                                About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Log Out
+                            </a>
+                        </li>
 
-                </ul>
-            </nav>
-            <div class="copyright ml-auto">
-                &copy; @DateTime.Now.Year - <a href="https://betholmo-portfolio.netlify.app/" target="_blank">Beth Olmo, M.S.</a>
+                    </ul>
+                </nav>
+                <div class="copyright ml-auto">
+                    &copy; @DateTime.Now.Year - <a href="https://betholmo-portfolio.netlify.app/" target="_blank">Beth Olmo, M.S.</a>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
         <section id="manualJoinModal">
             <div class="modal" id="manualJoin" tabindex="-1">
                 <div class="modal-dialog">
@@ -446,7 +446,7 @@
                 </div>
             </div>
         </section>
-
+        @RenderSection("Scripts", required: false)
         @section Scripts {
             @Scripts.Render("~/Scripts/jquery.validate.min.js")
             @Scripts.Render("~/Scripts/jquery.3.2.1.min.js")
