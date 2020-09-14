@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace CashGrow.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -20,11 +21,5 @@ namespace CashGrow.Controllers
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

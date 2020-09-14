@@ -226,6 +226,11 @@
     <Content Include="Images\CashGrowC100x40.png" />
     <Content Include="Images\CashGrowLight100x40.png" />
     <Content Include="Images\CashGrowLightB100x40.png" />
+    <Content Include="Images\CGAbout1536x960.png" />
+    <Content Include="Images\CGAbout1920x1200.png" />
+    <Content Include="Images\CGCardHeader300x100.png" />
+    <Content Include="Images\CGCardHeader300x100B.png" />
+    <Content Include="Images\CGCardHeader500x150.png" />
     <Content Include="Private.config" />
     <Content Include="Scripts\atlantis.min.js" />
     <Content Include="Scripts\bootstrap-notify.min.js" />
@@ -254,7 +259,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -344,6 +348,8 @@
     <Content Include="Views\Shared\_LayoutAccountViews.cshtml" />
     <Content Include="Views\Account\DemoLogin.cshtml" />
     <Content Include="Views\Account\AcceptInvitation.cshtml" />
+    <None Include="Properties\PublishProfiles\CashGrow - Web Deploy.pubxml" />
+    <Content Include="Views\Shared\_LayoutAboutView.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -832,7 +832,9 @@ body {
     padding-right: 2rem;
     padding-left: 2rem; } }
 .page-inner {
-  padding: 1.5rem 0; }
+  padding: 1.5rem 0;
+  /*height: 90vh;*/
+}
 
 @media (min-width: 576px) {
   .page-inner {
@@ -2542,7 +2544,7 @@ label {
       color: #7d7b7b; }
   .card-profile .card-header {
     border-bottom: 0px;
-    height: 100px;
+    height: 200px;
     position: relative; }
   .card-profile .card-body {
     padding-top: 60px; }
