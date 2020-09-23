@@ -48,27 +48,28 @@
                             @Html.AntiForgeryToken()
                             @Html.Hidden("emailKey", "DemoHeadEmail")
                             @Html.Hidden("passwordKey", "DemoHeadPassword")
-                        <div class="login-account">
-                            <button type="submit" class="btn btn-block btn-secondary">Head Of Household 1</button>
-                            <p class="mb-3">HoH Privileges?</p>
-                        </div>
+                            <div class="login-account">
+                                <button type="submit" class="btn btn-block btn-secondary">Head Of Household</button>
+                            </div>
                         }
-                       
+
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-xl-5">
                         @using (Html.BeginForm("DemoLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("emailKey", "DemoMemberEmail")
                             @Html.Hidden("passwordKey", "DemoMemberPassword")
-                        <div class="login-account">
-                            <button type="submit" class="btn btn-block btn-secondary">Household Member 1</button>
-                            <p class="mb-3">Member Privileges?</p>
-                        </div>
+                            <div class="login-account">
+                                <button type="submit" class="btn btn-block btn-secondary">Household Member</button>
+                            </div>
                         }
-                       
+
                     </div>
                     <br />
+                    <div class="login-form">
+                        <h2 class="text-center mt-xl-5">Or you can...</h2>
+                    </div>
                     <div class="login-account">
                         <a href="~/Account/Login" class="btn btn-block btn-success">Login</a>
                     </div>

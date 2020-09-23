@@ -8,10 +8,10 @@ namespace CashGrow.Models
 {
     public class EmailModel
     {
-        [Display(Name = "Name")]
+        [Required, Display(Name = "Name")]
         public string FromName { get; set; }
 
-        [Display(Name = "Name"), EmailAddress]
+        [Required, Display(Name = "Name"), EmailAddress]
         public string FromEmail { get; set; }
 
         [Required]

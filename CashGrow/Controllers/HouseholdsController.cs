@@ -16,6 +16,7 @@ using System.Drawing;
 
 namespace CashGrow.Controllers
 {
+    [Authorize]
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -218,9 +218,9 @@ namespace CashGrow.Controllers
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     rolesHelper.UpdateUserRole(user.Id, "New User");
-
+          
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 
                     try
                     {
@@ -234,9 +234,7 @@ namespace CashGrow.Controllers
 
                         var svc = new EmailService();
                         await svc.SendAsync(email);
-
-                        return View("ConfirmationSent");
-
+                        
                     }
                     catch (Exception ex)
                     {

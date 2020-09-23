@@ -14,10 +14,11 @@ namespace CashGrow.Controllers
 {
     public class InvitationsController : Controller
     {
+        
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Invitations/Create
-        [Authorize (Roles = "Head")]
+
         public ActionResult Create()
         {
             var hhId = User.Identity.GetHouseholdId();

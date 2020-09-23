@@ -14,6 +14,8 @@ namespace CashGrow.Models
 
         public virtual Budget Budget { get; set; }
 
+        //public virtual ICollection<Budget> Budgets { get; set; }
+
         public DateTime Created { get; set; }
 
         [Display(Name ="Name")]

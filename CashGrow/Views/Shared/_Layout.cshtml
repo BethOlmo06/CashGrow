@@ -1,4 +1,5 @@
-﻿@using CashGrow.Extensions;
+﻿@using CashGrow.Extensions
+@using CashGrow.Models
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,30 +49,30 @@
                             <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 
                                 <li class="nav-item dropdown hidden-caret">
-                                    <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
                                         <div class="avatar-sm">
                                             <img src="~/Avatars/DefaultAvatar.png" alt="..." class="avatar-img rounded-circle">
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-user animated fadeIn">
                                         <div class="dropdown-user-scroll scrollbar-outer">
-                                            <li>
-                                                <div class="user-box">
-                                                    <div class="avatar-lg"><img src="" alt="image profile" class="avatar-img rounded"></div>
-                                                    <div class="u-text">
-                                                        <h4>@User.Identity.GetFullName()</h4>
-                                                        <p class="text-muted">@User.Identity.Name</p>
-                                                        <a href="#" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
-                                                    </div>
+
+                                            <div class="user-box">
+                                                <div class="avatar-lg"><img src="" alt="image profile" class="avatar-img rounded"></div>
+                                                <div class="u-text">
+                                                    <h4>@User.Identity.GetFullName()</h4>
+                                                    <p class="text-muted">@User.Identity.Name</p>
+                                                    <a href="#" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                                 </div>
-                                            </li>
-                                            <li>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="~/Manage/ChangePassword">Reset My Password</a>
-                                                <a class="dropdown-item" href="~/Manage/UpdateProfile">Edit My Profile</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="~/Account/Login">Log Out</a>
-                                            </li>
+                                            </div>
+
+
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="~/Manage/ChangePassword">Reset My Password</a>
+                                            <a class="dropdown-item" href="~/Manage/UpdateProfile">Edit My Profile</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="~/Account/Login">Log Out</a>
+
                                         </div>
                                     </ul>
                                 </li>
@@ -88,48 +89,53 @@
                 </h3>
                 <div class="container d-flex flex-row">
                     <ul class="nav page-navigation page-navigation-secondary">
-                        <li class="nav-item submenu active">
+                        @if (User.IsInRole("New User"))
+                        {
+                            <li class="nav-item submenu">
+                                <a class="nav-link" href="~/Households/Create">
+                                    @*<i class="link-icon icon-book-open"></i>*@
+                                    <span class="menu-title">Create Household</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item submenu">
+                                <a class="nav-link" href="#manualJoin">
+                                    @*<i class="link-icon icon-book-open"></i>*@
+                                    <span class="menu-title">Join Household</span>
+                                </a>
+                            </li>
+                        }
+
+                        <li class="nav-item submenu">
                             <a class="nav-link" href="#">
-                                <i class="link-icon icon-screen-desktop"></i>
+                                @*<i class="link-icon icon-screen-desktop"></i>*@
                                 <span class="menu-title">Household</span>
                             </a>
                             <div class="navbar-dropdown animated fadeIn">
                                 <ul>
                                     <li>
-                                        <a href="~/Households/Create">New Household</a>
-                                    </li>
-                                    <li>
-                                        <a href="~/Invitations/Create">Invite User</a>
-                                    </li>
-                                    <li>
                                         <a href="#">All Household Members</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Join a Household</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Leave Household</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item submenu">
-                            <a class="nav-link" href="#">
-                                <i class="link-icon icon-grid"></i>
+                            <a class="nav-link" href="~/BankAccounts/Index">
+                                @*<i class="link-icon icon-grid"></i>*@
                                 <span class="menu-title">Bank Accounts</span>
                             </a>
                             <div class="navbar-dropdown animated fadeIn">
                                 <ul>
                                     <li>
-                                        <a href="#">Link New Account</a>
+                                        <a href="~/BankAccounts/Create">Link New Account</a>
                                     </li>
 
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item submenu">
-                            <a class="nav-link" href="#">
-                                <i class="link-icon icon-disc"></i>
+                            <a class="nav-link" href="~/Budgets/Index">
+                                @*<i class="link-icon icon-disc"></i>*@
                                 <span class="menu-title">Budgets</span>
                             </a>
                             <div class="navbar-dropdown animated fadeIn">
@@ -142,46 +148,20 @@
                             </div>
                         </li>
                         <li class="nav-item submenu">
-                            <a class="nav-link" href="#">
-                                <i class="link-icon icon-book-open"></i>
+                            <a class="nav-link" href="~/Transactions/Index">
+                                @*<i class="link-icon icon-book-open"></i>*@
                                 <span class="menu-title">Transactions</span>
                             </a>
-                            <div class="navbar-dropdown animated fadeIn">
-                                <ul>
-                                    <li>
-                                        <a href="starter-template.html">New Transaction</a>
-                                    </li>
-                                    <li>
-                                        <a href="~/Transactions/Index">All Transactions</a>
-                                    </li>
-
-                                </ul>
-                            </div>
+                            
                         </li>
-                        @*<li class="nav-item submenu">
-                                <a class="nav-link" href="#">
-                                    <i class="link-icon icon-pie-chart"></i>
-                                    <span class="menu-title">Revenue</span>
-                                </a>
-                                <div class="navbar-dropdown animated fadeIn">
-                                    <ul>
-                                        <li>
-                                            <a href="starter-template.html">Annual Report</a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </li>*@
                     </ul>
                 </div>
             </div>
         </div>
 
-        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#manualJoin">
-                Join A Household
-            </button>
 
-            <h1>My HouseholdId is: @User.Identity.GetHouseholdId()</h1>
+
+        @*<h1>My HouseholdId is: @User.Identity.GetHouseholdId()</h1>
             <h1>My FullName is: @User.Identity.GetFullName()</h1>
             <h1>My Avatar is: @User.Identity.GetAvatarPath()</h1>*@
 
@@ -197,7 +177,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="~/Account/Login">
                                 Log Out
                             </a>
                         </li>
@@ -245,6 +225,8 @@
                 </div>
             </div>
         </section>
+
+
         @RenderSection("Scripts", required: false)
         @section Scripts {
             @Scripts.Render("~/Scripts/jquery.validate.min.js")

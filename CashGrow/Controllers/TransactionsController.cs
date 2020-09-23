@@ -11,8 +11,10 @@ using CashGrow.Models;
 
 namespace CashGrow.Controllers
 {
+    [Authorize]
     public class TransactionsController : Controller
     {
+        
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Transactions

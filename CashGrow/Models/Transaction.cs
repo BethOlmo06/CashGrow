@@ -17,7 +17,7 @@ namespace CashGrow.Models
 
         public virtual BankAccount BankAccount { get; set; }
 
-        public int? BudgetItemId { get; set; }
+        public int BudgetItemId { get; set; }
 
         public virtual BudgetItem BudgetItem { get; set; }
 

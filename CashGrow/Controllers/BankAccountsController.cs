@@ -7,9 +7,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CashGrow.Models;
+using Microsoft.AspNet.Identity;
 
 namespace CashGrow.Controllers
 {
+    [Authorize]
     public class BankAccountsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -49,10 +51,13 @@ namespace CashGrow.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,OwnerId,AccountName,Created,StartingBalance,CurrentBalance,WarningBalance,IsDeleted,AccountType")] BankAccount bankAccount)
+        public ActionResult Create([Bind(Include = "Id,HouseholdId,AccountName,StartingBalance,CurrentBalance,WarningBalance,IsDeleted,AccountType")] BankAccount bankAccount)
         {
+            var ownerId = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
+                bankAccount.Created = DateTime.Now;
+                bankAccount.OwnerId = ownerId;
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
                 return RedirectToAction("Index");

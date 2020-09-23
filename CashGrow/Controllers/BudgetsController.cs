@@ -10,6 +10,7 @@ using CashGrow.Models;
 
 namespace CashGrow.Controllers
 {
+    [Authorize]
     public class BudgetsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -214,6 +214,7 @@
     <Content Include="Avatars\DefaultAvatar.png" />
     <Content Include="Content\atlantis2.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datatables.css" />
     <Content Include="Content\fonts.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fa-brands-400.svg" />

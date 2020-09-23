@@ -13,70 +13,70 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Household.HouseholdName)
+            Household
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Owner.FirstName)
+            Account Owner
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AccountName)
+            Account ID
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Created)
+            Account Name
         </th>
         <th>
+            Created On
+        </th>
+        @*<th>
             @Html.DisplayNameFor(model => model.StartingBalance)
+        </th>*@
+        <th>
+            Current Balance
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CurrentBalance)
+            Warning Balance
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.WarningBalance)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AccountType)
+            Account Type
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Household.HouseholdName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Owner.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Created)
-        </td>
-        <td>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Household.HouseholdName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Owner.FirstName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.AccountName)
+    </td>
+    <td>
+        @Html.DisplayName(item.Created.ToString("MMM dd, yyyy"))
+    </td>
+    @*<td>
             @Html.DisplayFor(modelItem => item.StartingBalance)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CurrentBalance)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WarningBalance)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsDeleted)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountType)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+        </td>*@
+    <td>
+        @Html.DisplayFor(modelItem => item.CurrentBalance)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.WarningBalance)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.AccountType)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+    </td>
+</tr>
 }
 
 </table>
