@@ -63,6 +63,7 @@ namespace CashGrow.Migrations
                 }, demoHeadPassword);
                 var userId = userManager.FindByEmail("DemHead@mailinator.com").Id;
                 userManager.AddToRole(userId, "Head");
+                
             };
 
             if (!context.Users.Any(u => u.Email == "DemMemb@mailinator.com"))
@@ -89,7 +90,8 @@ namespace CashGrow.Migrations
                     Created = DateTime.Now,
                     Greeting = "This is a Seeded House",
                     IsDeleted = false,
-                    HouseholdName = "Seeded House"
+                    HouseholdName = "Seeded House",
+                    OwnerId = userManager.FindByEmail(demoHeadEmail).Id
                 };
                 context.Households.Add(newHousehold);
             }

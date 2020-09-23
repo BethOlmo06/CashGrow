@@ -11,6 +11,10 @@ namespace CashGrow.Models
     {
         public int Id { get; set; }
 
+        public string OwnerId { get; set; }
+
+        public virtual ApplicationUser Owner { get; set; }
+
         [Display(Name = "Name")]
         public string HouseholdName { get; set; }
 
@@ -27,6 +31,8 @@ namespace CashGrow.Models
 
         public virtual ICollection<Budget> Budgets { get; set; }
 
+        public virtual ICollection<Transaction> Transactions { get; set; }
+
         public virtual ICollection<Invitation> Invitations { get; set; }
 
         public virtual ICollection<Notification> Notifications { get; set; }
@@ -36,6 +42,7 @@ namespace CashGrow.Models
             Members = new HashSet<ApplicationUser>();
             Accounts = new HashSet<BankAccount>();
             Budgets = new HashSet<Budget>();
+            Transactions = new HashSet<Transaction>();
             Invitations = new HashSet<Invitation>();
             Notifications = new HashSet<Notification>();
             Created = DateTime.Now;

@@ -41,6 +41,7 @@ namespace CashGrow.Models
         {
             Created = DateTime.Now;
             OwnerId = HttpContext.Current.User.Identity.GetUserId();
+
         }
     }
 }
