@@ -98,17 +98,17 @@ namespace CashGrow.Models
 
         public DbSet<BudgetItem> BudgetItems { get; set; }
 
-        public System.Data.Entity.DbSet<CashGrow.Models.BankAccount> BankAccounts { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
 
-        public System.Data.Entity.DbSet<CashGrow.Models.Household> Households { get; set; }
+        public DbSet<Household> Households { get; set; }
 
-        public System.Data.Entity.DbSet<CashGrow.Models.Budget> Budgets { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
 
-        public System.Data.Entity.DbSet<CashGrow.Models.Invitation> Invitations { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
 
-        public System.Data.Entity.DbSet<CashGrow.Models.Notification> Notifications { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
-        public System.Data.Entity.DbSet<CashGrow.Models.Transaction> Transactions { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
     }
 }

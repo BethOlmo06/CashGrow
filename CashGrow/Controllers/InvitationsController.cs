@@ -18,13 +18,13 @@ namespace CashGrow.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Invitations/Create
-
+        //[Authorize(Roles = "Head")]
         public ActionResult Create()
         {
             var hhId = User.Identity.GetHouseholdId();
             if(hhId == 0)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account"); 
             }
             var invitation = new Invitation((int)hhId);
             return View(invitation);
@@ -35,20 +35,20 @@ namespace CashGrow.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Invitation householdInvite)
+        public async Task<ActionResult> Create(Invitation invitation)
         {
             if (ModelState.IsValid)
             {
-                householdInvite.Code = Guid.NewGuid();
-                db.Invitations.Add(householdInvite);
+                invitation.Code = Guid.NewGuid();
+                db.Invitations.Add(invitation);
                 db.SaveChanges();
 
-                await householdInvite.SendInvitation();
+                await invitation.SendInvitation();
 
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(householdInvite);
+            return View(invitation);
         }
 
         // GET: Invitations/Edit/5

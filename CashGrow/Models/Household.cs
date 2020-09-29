@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -37,6 +38,8 @@ namespace CashGrow.Models
 
         public virtual ICollection<Notification> Notifications { get; set; }
 
+        public Household(bool bs) { }
+
         public Household ()
         {
             Members = new HashSet<ApplicationUser>();
@@ -46,6 +49,7 @@ namespace CashGrow.Models
             Invitations = new HashSet<Invitation>();
             Notifications = new HashSet<Notification>();
             Created = DateTime.Now;
+            OwnerId = HttpContext.Current.User.Identity.GetUserId();
         }
     }
 }

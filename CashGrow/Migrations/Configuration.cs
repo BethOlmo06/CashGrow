@@ -47,12 +47,15 @@ namespace CashGrow.Migrations
 
             var demoHeadEmail = WebConfigurationManager.AppSettings["DemoHeadEmail"];
             var demoMemberEmail = WebConfigurationManager.AppSettings["DemoMemberEmail"];
+            var demoNewUserEmail = WebConfigurationManager.AppSettings["DemoNewUserEmail"];
 
             var demoHeadPassword = WebConfigurationManager.AppSettings["DemoHeadPassword"];
             var demoMemberPassword = WebConfigurationManager.AppSettings["DemoMemberPassword"];
+            var demoNewUserPassword = WebConfigurationManager.AppSettings["DemoNewUserPassword"];
 
 
-            if (!context.Users.Any(u => u.Email == "DemHead@mailinator.com"))
+
+            if (!context.Users.Any(u => u.Email == demoHeadEmail))
             {
                 userManager.Create(new ApplicationUser()
                 {
@@ -61,12 +64,12 @@ namespace CashGrow.Migrations
                     FirstName = "Erin",
                     LastName = "Crommett, MBA",
                 }, demoHeadPassword);
-                var userId = userManager.FindByEmail("DemHead@mailinator.com").Id;
+                var userId = userManager.FindByEmail(demoHeadEmail).Id;
                 userManager.AddToRole(userId, "Head");
-                
+
             };
 
-            if (!context.Users.Any(u => u.Email == "DemMemb@mailinator.com"))
+            if (!context.Users.Any(u => u.Email == demoMemberEmail))
             {
                 userManager.Create(new ApplicationUser()
                 {
@@ -75,27 +78,56 @@ namespace CashGrow.Migrations
                     FirstName = "Tiffany",
                     LastName = "Thomas, MBA",
                 }, demoMemberPassword);
-                var userId = userManager.FindByEmail("DemMemb@mailinator.com").Id;
+                var userId = userManager.FindByEmail(demoMemberEmail).Id;
                 userManager.AddToRole(userId, "Member");
+            };
+
+            if (!context.Users.Any(u => u.Email == demoNewUserEmail))
+            {
+                userManager.Create(new ApplicationUser()
+                {
+                    Email = demoNewUserEmail,
+                    UserName = demoNewUserEmail,
+                    FirstName = "Ruth",
+                    LastName = "Bader Ginsburg",
+                }, demoMemberPassword);
+                var userId = userManager.FindByEmail(demoNewUserEmail).Id;
+                userManager.AddToRole(userId, "New User");
             };
 
             #endregion
 
             #region Seed Household
-            Household newHousehold = null;
-            if(!context.Households.Any())
+            Household newHousehold = new Household(true);
+            //if (!context.Households.Any())
+            //{
+                //newHousehold = new Household(true);
+
+                newHousehold.Created = DateTime.Now;
+                newHousehold.Greeting = "This is the Seed House";
+                newHousehold.IsDeleted = false;
+                newHousehold.HouseholdName = "Semillas";
+                newHousehold.OwnerId = userManager.FindByEmail(demoHeadEmail).Id;
+
+                context.Households.AddOrUpdate(newHousehold);
+                context.SaveChanges();
+            //};
+
+            #endregion
+
+            #region Assign Members to Household
+
+            var owner = userManager.FindByEmail(demoHeadEmail);
+            var household = context.Households.FirstOrDefault(h => h.OwnerId == owner.Id);
+            owner.HouseholdId = household.Id;
+
+            foreach (var member in context.Users.ToList())
             {
-                newHousehold = new Household
-                {
-                    Created = DateTime.Now,
-                    Greeting = "This is a Seeded House",
-                    IsDeleted = false,
-                    HouseholdName = "Seeded House",
-                    OwnerId = userManager.FindByEmail(demoHeadEmail).Id
-                };
-                context.Households.Add(newHousehold);
+                member.HouseholdId = household.Id;
             }
+
             context.SaveChanges();
+
             #endregion
 
             #region Seed Bank Account
@@ -120,7 +152,7 @@ namespace CashGrow.Migrations
 
             #region Seed Budget
             Budget budget = null;
-            if(!context.Budgets.Any())
+            if (!context.Budgets.Any())
             {
                 Console.WriteLine($"House Id: {newHousehold.Id}");
                 Console.WriteLine($"Head of Household Id: {ownerId}");
@@ -139,7 +171,7 @@ namespace CashGrow.Migrations
             #endregion
 
             #region Seed Item
-                if(!context.BudgetItems.Any())
+            if (!context.BudgetItems.Any())
             {
                 context.BudgetItems.Add(new BudgetItem()
                 {
@@ -153,6 +185,7 @@ namespace CashGrow.Migrations
                 context.SaveChanges();
             }
             #endregion
+
         }
     }
 }

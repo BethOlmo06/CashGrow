@@ -185,28 +185,36 @@
     </div>
 </body>
 
-<div class="modal" tabindex="-1" role="dialog" id="inviteUser">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Invite New User</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Enter User Email</label>
-                    <input class="form-control input" />
+@using (Html.BeginForm("Create", "Invitations", FormMethod.Post, null))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("householdId", null, new { id = "householdId" })
+    @Html.HiddenFor(model => model.Created)
+
+    <div class="modal" tabindex="-1" role="dialog" id="inviteUser">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Invite New User</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" value="Send Invitation" class="btn btn-success" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Enter User Email</label>
+                        <input class="form-control input" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Send Invitation" class="btn btn-success" />
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
+
 @section scripts {
     @Scripts.Render("~/Scripts/jquery.validate.min.js")
     @Scripts.Render("~/Scripts/jquery.3.2.1.min.js")
